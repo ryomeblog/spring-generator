@@ -1,0 +1,76 @@
+package ${project_path}.validations;
+
+import static ${project_path}.common.Functions.*;
+import static ${project_path}.constant.ApiErrorMessage.*;
+
+import java.lang.annotation.*;
+import java.util.*;
+
+import javax.validation.*;
+
+/**
+ * 重複禁止制約。
+ */
+@Documented
+@Constraint(validatedBy = {NoDuplicate.Validator.class})
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface NoDuplicate {
+
+    /**
+     * message
+     *
+     * @return message
+     */
+    String message() default MSG_API_ERR_004;
+
+    /**
+     * groups
+     *
+     * @return Class配列
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * payload
+     *
+     * @return Class配列
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /**
+     * List
+     */
+    @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        /**
+         * value
+         *
+         * @return NoDuplicate配列
+         */
+        NoDuplicate[] value();
+    }
+
+    /**
+     * 重複チェックバリデータ。
+     */
+    class Validator implements ConstraintValidator<NoDuplicate, Collection<?>> {
+
+        private NoDuplicate noDuplicate;
+
+        @Override
+        public void initialize(NoDuplicate noDuplicate) {
+            this.noDuplicate = noDuplicate;
+        }
+
+        @Override
+        public boolean isValid(Collection<?> value, ConstraintValidatorContext context) {
+            if (isEmpty(value)) {
+                return true;
+            }
+            return value.size() == new HashSet<>(value).size();
+        }
+    }
+}

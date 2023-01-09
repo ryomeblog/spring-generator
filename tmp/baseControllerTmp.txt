@@ -1,0 +1,139 @@
+package ${project_path}.controller;
+
+import static ${project_path}.common.Functions.*;
+
+import java.sql.*;
+
+import org.apache.ibatis.javassist.*;
+import org.springframework.dao.*;
+import org.springframework.http.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.validation.*;
+import org.springframework.web.bind.annotation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.exception.*;
+import ${project_path}.response.*;
+
+/**
+ * コントローラ共通メソッド実装クラス
+ */
+public class BaseController {
+
+    /**
+     * RequestParameterExceptionのハンドリング
+     *
+     * @param e RequestParameterException
+     * @return レスポンス
+     */
+    @ExceptionHandler(RequestParameterException.class)
+    protected ResponseEntity<?> handleException(RequestParameterException e) {
+
+        // レスポンスの作成
+        RequestParameterErrorResponse response = new RequestParameterErrorResponse();
+        response.setErrorParameterList(e.getErrorParamList());
+
+        return new ResponseEntity<>(
+                new ApiResponseOptional<>(e.getResultCode(), response),
+                new HttpHeaders(),
+                e.getHttpStatus());
+    }
+
+    /**
+     * ToCookRuntimeExceptionのハンドリング
+     *
+     * @param e ToCookRuntimeException
+     * @return レスポンス
+     */
+    @ExceptionHandler(${uppername}Exception.class)
+    protected ResponseEntity<?> handleException(${uppername}Exception e) {
+
+        return new ResponseEntity<>(
+                new ApiResponse(e.getResultCode()),
+                new HttpHeaders(),
+                nvl(e.getHttpStatus(), HttpStatus.BAD_REQUEST));
+    }
+
+    /**
+     * BadCredentialsExceptionのハンドリング
+     *
+     * @param e BadCredentialsException
+     * @return レスポンス
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<?> handleException(BadCredentialsException e) {
+
+        return new ResponseEntity<>(
+                new ApiResponse(ResultCode.C102),
+                new HttpHeaders(),
+                HttpStatus.FORBIDDEN);
+
+    }
+
+    /**
+     * SQLExceptionのハンドリング
+     *
+     * @param e SQLException
+     * @return レスポンス
+     */
+    @ExceptionHandler(SQLException.class)
+    protected ResponseEntity<?> handleException(SQLException e) {
+
+        return new ResponseEntity<>(
+                new ApiResponse(ResultCode.C109),
+                new HttpHeaders(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * DataIntegrityViolationExceptionのハンドリング
+     *
+     * @param e DataIntegrityViolationException
+     * @return レスポンス
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<?> handleException(DataIntegrityViolationException e) {
+
+        return new ResponseEntity<>(
+                new ApiResponse(ResultCode.C109),
+                new HttpHeaders(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * UsernameNotFoundExceptionのハンドリング
+     *
+     * @param e UsernameNotFoundException
+     * @return レスポンス
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    protected ResponseEntity<?> handleException(UsernameNotFoundException e) {
+
+        return new ResponseEntity<>(
+                new ApiResponse(ResultCode.C102),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<Object> handle404(NotFoundException ex) {
+
+        return new ResponseEntity<>(
+                new ApiResponse(ResultCode.C000),
+                new HttpHeaders(),
+                HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * BindingResultにエラーが格納されている場合、
+     * RequestParameterExceptionをスローします。
+     *
+     * @param result BindingResult
+     */
+    protected void valid(BindingResult result) {
+        if (result.hasErrors()) {
+            throw new RequestParameterException(result);
+        }
+    }
+}

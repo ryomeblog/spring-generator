@@ -1,0 +1,23 @@
+package ${project_path}.request.login;
+
+import javax.validation.constraints.*;
+
+import ${project_path}.validations.*;
+
+import lombok.*;
+
+@Data
+public class LoginRequest {
+
+    /** ユーザID */
+    @NotNull
+    @HalfAlphanumeric
+    @Size(min = 12, max = 12)
+    private String userId;
+
+    /** パスワード */
+    @NotNull
+    @HalfAlphanumeric
+    @Size(min = 1, max = 20)
+    private String password;
+}

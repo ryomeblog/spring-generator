@@ -1,0 +1,16 @@
+package ${project_path}.response;
+
+import java.util.*;
+
+import ${project_path}.exception.entity.*;
+import lombok.*;
+
+/**
+ * リクエストパラメータエラー レスポンス
+ */
+@Data
+public class RequestParameterErrorResponse {
+
+    /** エラーリスト */
+    private List<ErrorParam> errorParameterList;
+}

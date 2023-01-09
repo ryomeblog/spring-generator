@@ -1,0 +1,17 @@
+package ${project_path}.response;
+
+import ${project_path}.constant.*;
+
+import lombok.*;
+
+/**
+ * APIレスポンス
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ApiResponse {
+
+    /** 結果コード */
+    private ResultCode resultCode;
+}

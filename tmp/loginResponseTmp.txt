@@ -1,0 +1,12 @@
+package ${project_path}.response.login;
+
+import lombok.*;
+
+@Data
+@AllArgsConstructor
+public class LoginResponse {
+
+    private String ${username_column};
+    private String ${authority_column};
+    private Short version;
+}

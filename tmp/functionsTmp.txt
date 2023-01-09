@@ -1,0 +1,784 @@
+package ${project_path}.common;
+
+import static ${project_path}.constant.Constant.*;
+
+import java.text.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
+
+import org.springframework.http.*;
+
+public class Functions {
+
+    /**
+     * オブジェクトがNULLか判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isNull(Object obj) {
+        return obj == null;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isNotNull(Object obj) {
+        return obj != null;
+    }
+
+    /**
+     * オブジェクト1とオブジェクト2の比較結果を返却します。
+     *
+     * @param obj1 オブジェクト1
+     * @param obj2 オブジェクト2
+     * @return オブジェクト
+     */
+    public static boolean eq(Object obj1, Object obj2) {
+        if (isNull(obj1) && isNull(obj2)) return true;
+        if (isNull(obj1) || isNull(obj2)) return false;
+        return obj1.equals(obj2);
+    }
+
+    /**
+     * 文字列1と文字列2の比較結果を返却します。
+     *
+     * @param obj1 文字列1
+     * @param obj2 文字列2
+     * @return オブジェクト
+     */
+    public static boolean eq(String obj1, String obj2) {
+        if (isNull(obj1) && isNull(obj2)) return true;
+        if (isNull(obj1) || isNull(obj2)) return false;
+        return obj1.equals(obj2);
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isEmpty(Object obj) {
+        if (isNull(obj)) return true;
+        return obj.toString().length() == 0 || eq(obj, "");
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isEmpty(Object[] obj) {
+        if (isNull(obj)) return true;
+        return obj.length == 0;
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isEmpty(String obj) {
+        if (isNull(obj)) return true;
+        return obj.length() == 0 || eq(obj, "");
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     * @param <E>
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static <E> boolean isEmpty(List<E> obj) {
+        if (isNull(obj)) return true;
+        return obj.size() == 0;
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isNotEmpty(Object obj) {
+        if (isNull(obj)) return false;
+        return obj.toString().length() != 0 && !eq(obj, "");
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isNotEmpty(Object[] obj) {
+        if (isNull(obj)) return false;
+        return obj.length != 0;
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static boolean isNotEmpty(String obj) {
+        if (isNull(obj)) return false;
+        return obj.length() != 0 && !eq(obj, "");
+    }
+
+    /**
+     * オブジェクトがNULLか空か判別します。
+     * @param <E>
+     *
+     * @param obj オブジェクト
+     * @return オブジェクト
+     */
+    public static <E> boolean isNotEmpty(List<E> obj) {
+        if (isNull(obj)) return false;
+        return obj.size() != 0;
+    }
+
+    /**
+     * 指定したフォーマットと一致する文字列を削除します。
+     * NULLまたは空の場合、設定値をそのまま返します。
+     *
+     * @param obj オブジェクト
+     * @param format フォーマット
+     * @return オブジェクト
+     */
+    public static Object replaceEmpty(Object obj, String format) {
+        if (isEmpty(obj) || isEmpty(format)) return obj;
+        return asString(obj).replace(format, "");
+    }
+
+    /**
+     * 指定したフォーマットと一致する文字列を削除します。
+     * NULLまたは空の場合、設定値をそのまま返します。
+     *
+     * @param obj オブジェクト
+     * @param format フォーマット
+     * @return オブジェクト
+     */
+    public static String replaceEmpty(String obj, String format) {
+        if (isEmpty(obj) || isEmpty(format)) return obj;
+        return obj.replace(format, "");
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static Object nvl(Object obj, Object def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static HttpStatus nvl(HttpStatus obj, HttpStatus def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static Long nvl(Long obj, Long def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static Integer nvl(Integer obj, Integer def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static Short nvl(Short obj, Short def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static Byte nvl(Byte obj, Byte def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static Boolean nvl(Boolean obj, Boolean def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     * NULLの場合デフォルト値を返します。
+     *
+     * @param obj オブジェクト
+     * @param def デフォルト値
+     * @return オブジェクト
+     */
+    public static String nvl(String obj, String def) {
+        return isNotNull(obj) ? obj : def;
+    }
+
+    /**
+     * 数値がNULLか判別します。
+     *
+     * @param obj 数値
+     * @return 数値
+     */
+    public static Integer asInt(Integer obj) {
+        return isNotNull(obj) ? obj : 0;
+    }
+
+    /**
+     * オブジェクトがNULLか判別します。
+     *
+     * @param obj オブジェクト
+     * @return 文字列
+     */
+    public static String asString(Object obj) {
+        return isNotNull(obj) ? obj.toString() : "";
+    }
+
+    /**
+     * 文字列がNULLか判別します。
+     *
+     * @param obj 文字列
+     * @return 文字列
+     */
+    public static String asString(String obj) {
+        return isNotNull(obj) ? obj.toString() : "";
+    }
+
+    /**
+     * オブジェクトから文字列に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 文字列
+     */
+    public static String toString(Object obj) {
+        if (isNull(obj)) return null;
+        return asString(obj);
+    }
+
+    /**
+     * 文字列から文字列に変換します。
+     *
+     * @param obj 文字列
+     * @return 文字列
+     */
+    public static String toString(String obj) {
+        if (isNull(obj)) return null;
+        return asString(obj);
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Long toLong(Object obj) {
+        if (isEmpty(obj)) return null;
+        return Long.parseLong(asString(obj));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Long toLong(String obj) {
+        if (isEmpty(obj)) return null;
+        return Long.parseLong(asString(obj));
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Long addLong(Long value) {
+        return value + 1;
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Long addLong(String value) {
+        return addLong(toLong(value));
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Long addLong(Object value) {
+        return addLong(toLong(value));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Integer toInt(Object obj) {
+        if (isEmpty(obj)) return null;
+        return Integer.parseInt(asString(obj));
+    }
+
+    /**
+     * 文字列から数値に変換します。
+     *
+     * @param obj 文字列
+     * @return 数値
+     */
+    public static Integer toInt(String obj) {
+        if (isEmpty(obj)) return null;
+        return Integer.parseInt(asString(obj));
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Integer addInt(Integer value) {
+        return value + 1;
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Integer addInt(String value) {
+        return addInt(toInt(value));
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Integer addInt(Object value) {
+        return addInt(toInt(value));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Short toShort(Object obj) {
+        if (isEmpty(obj)) return null;
+        return Short.parseShort(asString(obj));
+    }
+
+    /**
+     * 文字列から数値に変換します。
+     *
+     * @param obj 文字列
+     * @return 数値
+     */
+    public static Short toShort(String obj) {
+        if (isEmpty(obj)) return null;
+        return Short.parseShort(obj);
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Short toShort(Integer obj) {
+        if (isEmpty(obj)) return null;
+        return Short.parseShort(asString(obj));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Short toShort(Long obj) {
+        if (isEmpty(obj)) return null;
+        return Short.parseShort(asString(obj));
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Short addShort(Short value) {
+        return toShort(value + 1);
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Short addShort(String value) {
+        return addShort(toShort(value));
+    }
+
+    /**
+     * 数値を加算します。
+     *
+     * @param value 数値
+     * @return 数値
+     */
+    public static Short addShort(Object value) {
+        return addShort(toShort(value));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Float toFloat(Object obj) {
+        if (isEmpty(obj)) return null;
+        return Float.parseFloat(asString(obj));
+    }
+
+    /**
+     * 文字列から数値に変換します。
+     *
+     * @param obj 文字列
+     * @return 数値
+     */
+    public static Float toFloat(String obj) {
+        if (isEmpty(obj)) return null;
+        return Float.parseFloat(obj);
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Float toFloat(Integer obj) {
+        if (isEmpty(obj)) return null;
+        return Float.parseFloat(asString(obj));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Float toFloat(Long obj) {
+        if (isEmpty(obj)) return null;
+        return Float.parseFloat(asString(obj));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Double toDouble(Object obj) {
+        if (isEmpty(obj)) return null;
+        return Double.parseDouble(asString(obj));
+    }
+
+    /**
+     * 文字列から数値に変換します。
+     *
+     * @param obj 文字列
+     * @return 数値
+     */
+    public static Double toDouble(String obj) {
+        if (isEmpty(obj)) return null;
+        return Double.parseDouble(obj);
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Double toDouble(Integer obj) {
+        if (isEmpty(obj)) return null;
+        return Double.parseDouble(asString(obj));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Double toDouble(Long obj) {
+        if (isEmpty(obj)) return null;
+        return Double.parseDouble(asString(obj));
+    }
+
+    /**
+     * オブジェクトから数値に変換します。
+     *
+     * @param obj オブジェクト
+     * @return 数値
+     */
+    public static Byte toByte(Object obj) {
+        if (isEmpty(obj)) return null;
+        return Byte.parseByte(asString(obj));
+    }
+
+    /**
+     * 文字列から数値に変換します。
+     *
+     * @param obj 文字列
+     * @return 数値
+     */
+    public static byte[] toByte(String obj) {
+        if (isEmpty(obj)) return null;
+        return asString(obj).getBytes();
+    }
+
+    /**
+     * 文字列から真偽値に変換します。
+     *
+     * @param obj 文字列
+     * @return 真偽値
+     */
+    public static Boolean toBoolean(String obj) {
+        if (isEmpty(obj)) return null;
+        return Boolean.parseBoolean(asString(obj));
+    }
+
+    /**
+     * 文字列から日付に変換します。
+     *
+     * @param obj 日付文字列
+     * @return 日付
+     * @throws ParseException
+     */
+    public static Date toDate(String obj, String format) throws ParseException {
+        if (isNull(obj) || isNull(format)) return null;
+        return new SimpleDateFormat(format).parse(obj);
+    }
+
+    /**
+     * 文字列から日付に変換します。
+     *
+     * @param obj 日付文字列
+     * @return 日付
+     * @throws ParseException
+     */
+    public static Date toDate(String obj) throws ParseException {
+        if (isNull(obj)) return null;
+        return new SimpleDateFormat(DATE_FORMAT).parse(obj);
+    }
+
+    /**
+     * 文字列から日付に変換します。
+     *
+     * @param obj 日付文字列
+     * @return 日付
+     * @throws ParseException
+     */
+    public static Date toDate(Date obj) throws ParseException {
+        if (isNull(obj)) return null;
+        return toDate(new SimpleDateFormat(DATE_FORMAT).format(obj));
+    }
+
+    /**
+     * 日付に日数を加算します。
+     *
+     * @param date 日付
+     * @param day 日数
+     * @return 加算日付
+     */
+    public static Date addDayDate(Date date, Short day) {
+        if (isNull(date)) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, day);
+        return cal.getTime();
+    }
+
+    /**
+     * 日付に日数を加算します。
+     *
+     * @param date 日付
+     * @param day 日数
+     * @return 加算日付
+     */
+    public static Date addDayDate(Date date, Integer day) {
+        if (isNull(date)) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, day);
+        return cal.getTime();
+    }
+
+    /**
+     * 日付に日数を加算します。
+     *
+     * @param date 日付
+     * @param day 日数
+     * @return 加算日付
+     */
+    public static Date addDayDate(Date date, Long day) {
+        if (isNull(date)) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, toInt(day));
+        return cal.getTime();
+    }
+
+    /**
+     * 文字列から日付に変換します。
+     *
+     * @param obj 日付文字列
+     * @return 日付
+     */
+    public static LocalDate toLocalDate(String obj, String format) {
+        if (isNull(obj) || isNull(format)) return null;
+        return LocalDate.parse(obj, DateTimeFormatter.ofPattern(format));
+    }
+
+    /**
+     * 文字列から日付に変換します。
+     *
+     * @param obj 日付文字列
+     * @return 日付
+     */
+    public static LocalDate toLocalDate(String obj) {
+        if (isNull(obj)) return null;
+        return LocalDate.parse(obj, DateTimeFormatter.ofPattern(DATE_FORMAT));
+    }
+
+    /**
+     * 文字列から日付に変換します。
+     *
+     * @param obj 日付文字列
+     * @return 日付
+     */
+    public static LocalDate toLocalDate(Date obj) {
+        if (isNull(obj)) return null;
+        return toLocalDate(new SimpleDateFormat(DATE_FORMAT).format(obj));
+    }
+
+    /**
+     * オブジェクトをフォーマッタに直します。
+     *
+     * @param obj オブジェクト
+     * @param format フォーマット
+     * @return フォーマットした値
+     */
+    public static String format(Object obj, String format) {
+        if (isNull(obj) || isNull(format)) return null;
+        return String.format(format, obj);
+    }
+
+    /**
+     * 数値をフォーマッタ（文字）に直します。
+     *
+     * @param obj オブジェクト
+     * @param format フォーマット
+     * @return フォーマットした値
+     */
+    public static String format(Integer obj, String format) {
+        if (isNull(obj) || isNull(format)) return null;
+        return String.format(format, obj);
+    }
+
+    /**
+     * 数値をフォーマッタ（文字）に直します。
+     *
+     * @param obj オブジェクト
+     * @param format フォーマット
+     * @return フォーマットした値
+     */
+    public static String format(Short obj, String format) {
+        if (isNull(obj) || isNull(format)) return null;
+        return String.format(format, obj);
+    }
+
+    /**
+     * 日付をフォーマッタ（文字）に直します。
+     *
+     * @param obj オブジェクト
+     * @param format フォーマット
+     * @return フォーマットした値
+     */
+    public static String format(Date obj, String format) {
+        if (isNull(obj) || isNull(format)) return null;
+        return new SimpleDateFormat(format).format(obj);
+    }
+}

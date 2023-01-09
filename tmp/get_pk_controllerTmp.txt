@@ -1,0 +1,44 @@
+package ${project_path}.controller.${tblname};
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.validation.*;
+import org.springframework.validation.annotation.*;
+import org.springframework.web.bind.annotation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.controller.*;
+import ${project_path}.dto.generator.*;
+import ${project_path}.request.${tblname}.*;
+import ${project_path}.response.*;
+import ${project_path}.response.${tblname}.*;
+import ${project_path}.service.${tblname}.*;
+
+@RestController
+public class Get${uppertblname}ByPrimaryKeyController extends BaseController {
+
+    @Autowired
+    private ${uppertblname}Service ${tblname}Service;
+
+    @GetMapping("${path}")
+    public ApiResponseOptional<Get${uppertblname}ByPrimaryKeyResponse> get${uppertblname}ByPrimaryKey(@ModelAttribute @Validated ${uppertblname}PathParameter request,
+            BindingResult bindingResult) {
+
+        // 詳細情報取得
+        ${uppertblname} dto = ${tblname}Service.getListByPrimaryKey(
+${getordelpkparamsController});
+
+        // レスポンス返却
+        return new ApiResponseOptional<>(ResultCode.C000, createResponse(dto));
+    }
+
+    Get${uppertblname}ByPrimaryKeyResponse createResponse(${uppertblname} dto) {
+
+        if(isNull(dto)) return new Get${uppertblname}ByPrimaryKeyResponse();
+
+        return new Get${uppertblname}ByPrimaryKeyResponse()
+${setResponsedto};
+    }
+}

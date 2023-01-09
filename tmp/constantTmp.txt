@@ -1,0 +1,65 @@
+package ${project_path}.constant;
+
+/**
+ * 共通利用定数クラス
+ */
+public class Constant {
+
+    /** 半角英数字正規表現 */
+    public static final String HALF_ALPHANUMERIC_REGEX = "^[A-Za-z0-9]+$";
+
+    /** 半角数字正規表現 */
+    public static final String HALF_NUMERIC_REGEX = "^[0-9]*$";
+
+    /** 数値正規表現(先頭の+-含む) */
+    public static final String NUMBER_REGEX = "^[+-]?[0-9]*$";
+
+    /** 日付正規表現 */
+    public static final String DATE_REGEX = "^\\d{4}/\\d{2}/\\d{2}$";
+
+    /** 日付フォーマット("yyyy/MM/dd") */
+    public static final String DATE_FORMAT = "yyyy/MM/dd";
+
+    /** 日付フォーマット("yyyyMMdd") */
+    public static final String DATE_NUMBER_FORMAT = "yyyyMMdd";
+
+    /** ログ表示日付フォーマット("yyyy/MM/dd HH:mm:ss.SSS") */
+    public static final String LOG_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    /** ログ表示スレッドIDフォーマット */
+    public static final String LOG_THREAD_ID_FORMAT = "%5s";
+
+    /** 拡張子(.png) */
+    public static final String EXTENSION_PNG = ".png";
+
+    /** 拡張子(.jpeg) */
+    public static final String EXTENSION_JPEG = ".jpeg";
+
+    /** URI(.png) */
+    public static final String THUMBNAIL_PREFIX_PNG = "data:image/png;base64,";
+
+    /** URI(.jpeg) */
+    public static final String THUMBNAIL_PREFIX_JPEG = "data:image/jpeg;base64,";
+
+    /** flag on */
+    public static final String FLAG_ON = "true";
+
+    /** flag off */
+    public static final String FLAG_OFF = "false";
+
+    /** 権限（ユーザ） */
+    public static final String ROLE_USER = "user";
+
+    /** 権限（ユーザ）数値 */
+    public static final Short ROLE_USER_NUM = 0;
+
+    /** 権限（管理者） */
+    public static final String ROLE_ADMIN = "admin";
+
+    /** 権限（管理者）数値 */
+    public static final Short ROLE_ADMIN_NUM = 1;
+
+    /** ログイン失敗上限回数 */
+    public static final Integer LOGIN_ERROR_MAX_COUNT = 10;
+
+}

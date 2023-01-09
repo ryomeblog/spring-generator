@@ -1,0 +1,108 @@
+package ${project_path}.validations;
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+import static ${project_path}.constant.ApiErrorMessage.*;
+import static ${project_path}.constant.Constant.*;
+
+import java.lang.annotation.*;
+
+import javax.validation.*;
+
+/**
+ * 半角数字(Integer)制約。
+ */
+@Documented
+@Constraint(validatedBy = {IntegerType.Validator.class})
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+public @interface IntegerType {
+
+    /**
+     * message
+     *
+     * @return message
+     */
+    String message() default MSG_API_ERR_003;
+
+    /**
+     * groups
+     *
+     * @return Class配列
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * payload
+     *
+     * @return Class配列
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /** 最小値を設定します。 */
+    int min() default Integer.MIN_VALUE;
+
+    /** 最大値を設定します。 */
+    int max() default Integer.MAX_VALUE;
+
+    /** 空を許容する場合trueを設定します。 */
+    boolean acceptEmpty() default false;
+
+    /**
+     * +,-の符号を許容する場合trueを設定します。
+     * 負の数を許容する場合は必ずtrueを設定して下さい。
+     */
+    boolean acceptSign() default false;
+
+    /**
+     * List
+     */
+    @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        /**
+         * value
+         *
+         * @return IntegerType配列
+         */
+        IntegerType[] value();
+    }
+
+    /**
+     * 半角数字バリデータ。
+     */
+    class Validator implements ConstraintValidator<IntegerType, String> {
+
+        private IntegerType integerType;
+
+        @Override
+        public void initialize(IntegerType integerType) {
+            this.integerType = integerType;
+        }
+
+        @Override
+        public boolean isValid(String value, ConstraintValidatorContext context) {
+            if (isEmpty(value) || integerType.acceptEmpty()) {
+                return true;
+            }
+
+            if (integerType.acceptSign()
+                    && !regexCheck(value, NUMBER_REGEX)) {
+                return false;
+            }
+            if (!integerType.acceptSign()
+                    && !regexCheck(value, HALF_NUMERIC_REGEX)) {
+                return false;
+            }
+
+            // parseIntチェック, min/maxチェック
+            try {
+                int valueInt = toInt(value);
+                return valueInt >= integerType.min() && valueInt <= integerType.max();
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+    }
+}

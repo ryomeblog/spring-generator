@@ -1,0 +1,88 @@
+package ${project_path}.validations;
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+import static ${project_path}.constant.ApiErrorMessage.*;
+import static ${project_path}.constant.Constant.*;
+
+import java.lang.annotation.*;
+import java.text.*;
+
+import javax.validation.*;
+
+/**
+ * 日付フォーマット(yyyy/MM/dd)制約。
+ */
+@Documented
+@Constraint(validatedBy = {DateType.Validator.class})
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+public @interface DateType {
+
+    /**
+     * message
+     *
+     * @return message
+     */
+    String message() default MSG_API_ERR_001;
+
+    /**
+     * groups
+     *
+     * @return Class配列
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * payload
+     *
+     * @return Class配列
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /**
+     * List
+     */
+    @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        /**
+         * value
+         *
+         * @return DateType配列
+         */
+        DateType[] value();
+    }
+
+    /**
+     * 半角数字バリデータ。
+     */
+    class Validator implements ConstraintValidator<DateType, String> {
+
+        private DateType dateType;
+
+        @Override
+        public void initialize(DateType dateType) {
+            this.dateType = dateType;
+        }
+
+        @Override
+        public boolean isValid(String value, ConstraintValidatorContext context) {
+            if (isEmpty(value)) {
+                return true;
+            }
+            if (!regexCheck(value, DATE_REGEX)) {
+                return false;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+            sdf.setLenient(false);
+            try {
+                sdf.parse(value);
+            } catch (ParseException e) {
+                return false;
+            }
+            return true;
+        }
+    }
+}

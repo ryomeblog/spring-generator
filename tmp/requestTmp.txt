@@ -1,0 +1,12 @@
+package ${project_path}.request.${tblname};
+
+import javax.validation.constraints.*;
+
+import ${project_path}.validations.*;
+import lombok.*;
+
+@Data
+public class ${classname} {
+
+${params}
+}

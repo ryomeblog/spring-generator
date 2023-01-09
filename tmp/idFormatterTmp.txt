@@ -1,0 +1,6 @@
+package ${project_path}.constant;
+
+public class IdFormatterConstant {
+
+${idFormatterConstant}
+}

@@ -1,0 +1,45 @@
+package ${project_path}.controller.${tblname};
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${project_path}.constant.ResultCode;
+import ${project_path}.controller.BaseController;
+import ${project_path}.dto.generator.${uppertblname};
+import ${project_path}.request.${tblname}.Edit${uppertblname}Request;
+import ${project_path}.response.ApiResponse;
+import ${project_path}.service.${tblname}.${uppertblname}Service;
+
+@RestController
+public class Edit${uppertblname}Controller extends BaseController {
+
+    @Autowired
+    private ${uppertblname}Service ${tblname}Service;
+
+    @PutMapping("${path}")
+    public ApiResponse edit(
+            @RequestBody @Validated Edit${uppertblname}Request request, BindingResult bindingResult) {
+        // バリデーションチェック
+        valid(bindingResult);
+
+        // 更新処理
+        ${tblname}Service.edit((createDto(request)));
+
+        // レスポンス返却
+        return new ApiResponse(ResultCode.C000);
+    }
+
+    ${uppertblname} createDto(Edit${uppertblname}Request request) {
+        // DTO作成
+        ${uppertblname} dto = new ${uppertblname}();
+${setdto}
+        return dto;
+    }
+}

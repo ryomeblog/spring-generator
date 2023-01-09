@@ -1,0 +1,51 @@
+package ${project_path}.controller.${tblname};
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.validation.*;
+import org.springframework.validation.annotation.*;
+import org.springframework.web.bind.annotation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.controller.*;
+import ${project_path}.dto.generator.*;
+import ${project_path}.request.${tblname}.*;
+import ${project_path}.response.*;
+import ${project_path}.response.${tblname}.*;
+import ${project_path}.service.${tblname}.*;
+
+@RestController
+public class Create${uppertblname}Controller extends BaseController {
+
+    @Autowired
+    private ${uppertblname}Service ${tblname}Service;
+
+    @PostMapping("${path}")
+    public ApiResponseOptional<Create${uppertblname}Response> create(
+            @RequestBody @Validated Create${uppertblname}Request request, BindingResult bindingResult) {
+        // バリデーションチェック
+        valid(bindingResult);
+
+        // 登録処理
+        String id = ${tblname}Service.insertWithId(createDto(request));
+
+        // レスポンス返却
+        return new ApiResponseOptional<>(ResultCode.C000, toCreate${uppertblname}Response(id));
+    }
+
+    Create${uppertblname}Response toCreate${uppertblname}Response(String id) {
+        // レスポンス作成
+        return new Create${uppertblname}Response()
+${pkparamsSet};
+    }
+
+    ${uppertblname} createDto(Create${uppertblname}Request request) {
+
+        // DTO作成
+        ${uppertblname} dto = new ${uppertblname}();
+${setdto}
+        return dto;
+    }
+}

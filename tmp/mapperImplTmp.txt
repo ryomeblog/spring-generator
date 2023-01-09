@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${project_path}.dao.${uppertblname}MapperImpl">
+  <resultMap id="default" type="${project_path}.dto.generator.${uppertblname}">
+${resultMap}
+  </resultMap>
+
+  <select id="selectMaxId" resultType="java.lang.String">
+    SELECT
+${maxcolumns}
+    FROM
+      ${tblname}
+    ;
+  </select>
+
+  <select id="selectListCount" resultType="java.lang.Integer">
+    SELECT
+      COUNT(*)
+    FROM
+      ${tblname}
+    WHERE
+      0 = 0
+${selectList}
+    ;
+  </select>
+
+  <select id="selectList" resultMap="default">
+    SELECT
+      *
+    FROM
+      ${tblname}
+    WHERE
+      0 = 0
+${selectList}
+    ORDER BY
+${orderBy}
+    <if test="ascOrDesc == 1">
+      ASC
+    </if>
+    <if test="ascOrDesc == 2">
+      DESC
+    </if>
+    LIMIT
+      #{limit}
+    OFFSET
+      #{offset}
+    ;
+  </select>
+
+</mapper>
