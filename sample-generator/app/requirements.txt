@@ -1,0 +1,5 @@
+jsonpatch==1.32
+jsonpickle==3.0.0
+jsonpointer==2.3
+jsonschema==3.2.0
+psycopg2==2.9.5

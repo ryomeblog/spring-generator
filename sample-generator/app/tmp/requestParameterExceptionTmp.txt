@@ -1,0 +1,85 @@
+package ${project_path}.exception;
+
+import static ${project_path}.common.Functions.*;
+
+import java.util.*;
+import java.util.stream.*;
+
+import org.springframework.http.*;
+import org.springframework.validation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.exception.entity.*;
+
+import lombok.*;
+
+@Getter
+public class RequestParameterException extends ${uppername}Exception {
+
+    /** BindingResult */
+    private final BindingResult result;
+
+    /**
+     * エラーパラメータリスト
+     */
+    private final List<ErrorParam> errorParamList;
+
+    /**
+     * コンストラクタ
+     *
+     * 引数のBindingResultを元にエラーパラメータリストを生成します。
+     *
+     * @param result BindingResult
+     */
+    public RequestParameterException(BindingResult result) {
+        super(HttpStatus.BAD_REQUEST, ResultCode.C101);
+        this.result = result;
+        this.errorParamList = result.getAllErrors().stream()
+                .map(error -> {
+                    String name;
+                    String value;
+                    String message;
+                    if (error instanceof FieldError) {
+                        FieldError fieldError = (FieldError) error;
+                        name = fieldError.getField();
+                        value = String.valueOf(fieldError.getRejectedValue());
+                        message = fieldError.getDefaultMessage();
+                    } else {
+                        Object arguments =  isNull(error.getArguments()) && error.getArguments().length >= 2
+                                ? error.getArguments()[1]
+                                : null;
+                        name = arguments instanceof String[]
+                                ? String.join(",", (String[]) error.getArguments()[1])
+                                : null;
+                        value = null;
+                        message = error.getDefaultMessage();
+                    }
+                    return new ErrorParam(name, value, message);
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * コンストラクタ（BindingResult無し）
+     *
+     * BindingResultから本Exceptionを生成しない場合に使用します。
+     * addErrorParams()によってエラーパラメータを追加して下さい。
+     */
+    public RequestParameterException() {
+        super(HttpStatus.BAD_REQUEST, ResultCode.C101);
+        this.result = null;
+        this.errorParamList = new ArrayList<>();
+    }
+
+
+    /**
+     * エラーパラメータの追加をします。
+     *
+     * @param name    パラメータ名
+     * @param value   値
+     * @param message エラーメッセージ
+     */
+    public void addErrorParams(String name, Object value, String message) {
+        errorParamList.add(new ErrorParam(name, value, message));
+    }
+}

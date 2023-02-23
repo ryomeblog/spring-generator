@@ -1,0 +1,160 @@
+package ${project_path}.common;
+
+import static ${project_path}.constant.Constant.*;
+
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
+import java.util.regex.*;
+
+import org.springframework.security.core.context.*;
+import org.springframework.security.crypto.bcrypt.*;
+
+public class CommonUtils extends Functions {
+
+    /**
+     * 入力文字列が正規表現に一致するかをチェックします。
+     *
+     * @param target 入力文字列
+     * @param regex 正規表現
+     * @return boolean
+     */
+    public static boolean regexCheck(String target, String regex) {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(target);
+        return m.find();
+    }
+
+    /**
+     * 入力文字列が半角英数字のみで構成されるかチェックします。
+     *
+     * @param target 入力文字列
+     * @return boolean
+     */
+    public static boolean isHalfAlphaNumeric(String target) {
+        return regexCheck(target, HALF_ALPHANUMERIC_REGEX);
+    }
+
+    /**
+     * 日付を"yyyy/MM/dd"形式に変換した文字列を返却します。
+     *
+     * @param localDate 日付
+     * @return 日付文字列(" yyyy / MM / dd " 形式)
+     */
+    public static String convertLocalDateToString(LocalDate localDate) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        return !isNull(localDate) ? localDate.format(dtf) : null;
+    }
+
+    /**
+     * yyyy/MM/dd形式の文字列をLocalDate型に変換します
+     *
+     * @param strDate 日付文字列文字列(yyyy/MM/dd形式)
+     * @return 日付(LocalDate)
+     */
+    public static LocalDate convertStringToLocalDate(String strDate) {
+        return toLocalDate(strDate, DATE_FORMAT);
+    }
+
+    /**
+     * 入力文字列から半角スペース、全角スペースを取り除いた文字列を返却します。
+     *
+     * @param target 入力文字列
+     * @return 全角スペースを取り除いた文字列を返却します。
+     */
+    public static String removeSpace(String target) {
+        if (!isEmpty(target)) {
+            return target.replace(" ", "").replace("　", "");
+        } else {
+            return target;
+        }
+    }
+
+    /**
+     * パスワードをハッシュ化して返却します。
+     *
+     * @param password パスワード
+     * @return ハッシュ化パスワード
+     */
+    public static String passwordEncode(String password) {
+        if (isNull(password)) return null;
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
+    /**
+     * パスワードリストをハッシュ化して返却します。
+     *
+     * @param passwords パスワードリスト
+     * @return ハッシュ化パスワードリスト
+     */
+    public static List<String> passwordEncode(String... passwords) {
+        List<String> passwordList = new ArrayList<>();
+        for (String password : passwords) {
+            if (isNull(password)) continue;
+            passwordList.add(passwordEncode(password));
+        }
+        return passwordList;
+    }
+
+    /**
+     * パスワードがハッシュ化後のパスワードと一致するか比較します。
+     *
+     * @param rawPassword ハッシュ化前パスワード
+     * @param encodedPassword ハッシュ化後パスワード
+     * @return 比較結果
+     */
+    public static boolean passwordMatches(String rawPassword, String encodedPassword) {
+        if (isNull(rawPassword) || isNull(encodedPassword)) return false;
+        return new BCryptPasswordEncoder().matches(rawPassword, encodedPassword);
+    }
+
+    /**
+     * SQLのLIKE句向けに"\","%","_"をエスケープします。
+     * 入力がnullの場合、nullを返却します。
+     *
+     * @param target 処理対象文字列
+     * @return エスケープした文字列
+     */
+    public static String escapeForLikePattern(String target) {
+        if (isNull(target)) return null;
+        String esSymbol = "\\";
+        String percent = "%";
+        String underScore = "_";
+        return target
+                .replace(esSymbol, esSymbol + esSymbol)
+                .replace(percent, esSymbol + percent)
+                .replace(underScore, esSymbol + underScore);
+    }
+
+    /**
+     * ログイン中のユーザIDを取得します。
+     *
+     * @return ユーザID
+     */
+    public static String getLoginUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    /**
+     * 既定の数値から権限情報に変換します。
+     * （0:ユーザ, 1:管理者）
+     *
+     * @param role 数値
+     * @return 権限情報
+     */
+    public static String getRole(Short role) {
+        return role == ROLE_ADMIN_NUM ? ROLE_ADMIN : ROLE_USER;
+    }
+
+    /**
+     * IDを数値に変換します。
+     *
+     * @param id ID
+     * @param format フォーマット
+     * @return 数値
+     */
+    public static Integer idToValue(String id, String format) {
+        if (isNull(id)) return 0;
+        return toInt(replaceEmpty(id, format));
+    }
+}

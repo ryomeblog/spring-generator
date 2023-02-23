@@ -1,0 +1,40 @@
+{
+  "name": "todolist",
+  "project_path": "todolist",
+  "description": "description",
+  "db": {
+    "dbname": "test",
+    "user": "testUser",
+    "password": "testPassword",
+    "host": "db",
+    "port": "5432"
+  },
+  "authorization": {
+    "authFlg": true,
+    "authTbl": {
+      "tblname": "user_tbl",
+      "usernameColumn": "user_id",
+      "passwardColumn": "password",
+      "authorityColumn": "authority",
+      "lockColumn": "lock"
+    }
+  },
+  "project": {
+    "pom": true,
+    "mybatis": true,
+    "banner": true,
+    "properties": true
+  },
+  "option": {
+    "Main": true,
+    "IdFormatterConstant": true,
+    "Exception": true,
+    "Template": true
+  },
+  "generator": {
+    "get": true,
+    "create": true,
+    "edit": true,
+    "delete": true
+  }
+}

@@ -1,0 +1,27 @@
+package ${project_path}.controller.login;
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.web.bind.annotation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.controller.*;
+import ${project_path}.response.*;
+import ${project_path}.service.login.*;
+
+@RestController
+public class LogoutController extends BaseController {
+
+    /** ログインサービス */
+    @Autowired
+    private LoginService loginService;
+
+    @PostMapping("/user/logout")
+    public ApiResponse logout() {
+
+        // ログアウト処理
+        loginService.logout();
+
+        // レスポンス返却
+        return new ApiResponse(ResultCode.C000);
+    }
+}

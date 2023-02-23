@@ -1,0 +1,29 @@
+package ${project_path}.constant;
+
+/**
+ * ApiErrorMessage
+ */
+public class ApiErrorMessage {
+
+    /** 入力された日付がyyyy/MM/dd形式になっていない */
+    public static final String MSG_API_ERR_001 = "yyyy/MM/dd形式で入力して下さい";
+
+    /** 半角数字ではない または 数値の範囲になっていない */
+    public static final String MSG_API_ERR_003 = "半角数字ではない または 指定の範囲になっていません";
+
+    /** 値重複 */
+    public static final String MSG_API_ERR_004 = "重複している値があります";
+
+    /** 最大日数超過 */
+    public static final String MSG_API_ERR_005 = "最大日数を超過しています";
+
+    /** 真偽型不一致 */
+    public static final String MSG_API_ERR_006 = "boolean型で入力してください";
+
+    /** 半角英数字制約 */
+    public static final String MSG_API_ERR_007 = "半角英数字で入力してください";
+
+    /** 認証機能 */
+    public static final String MSG_API_ERR_101 = "ユーザが存在しません";
+    public static final String MSG_API_ERR_102 = "パスワードが不正です";
+}

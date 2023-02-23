@@ -1,0 +1,25 @@
+package ${project_path}.response.${tblname};
+
+import java.util.*;
+
+import lombok.*;
+import lombok.experimental.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ${classname} {
+
+    /** 総件数 */
+    private int total;
+
+    /** リスト */
+    private List<${classname}Tmp> get${uppertblname}TmpList;
+
+    @Data
+    @Accessors(chain = true)
+    public static class ${classname}Tmp {
+
+${params}
+    }
+}

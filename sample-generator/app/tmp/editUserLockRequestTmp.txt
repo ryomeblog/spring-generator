@@ -1,0 +1,13 @@
+package ${project_path}.request.user;
+
+import javax.validation.constraints.*;
+
+import lombok.*;
+
+@Data
+public class EditUserLockRequest {
+
+    private String userId;
+    private String lock;
+    private String version = "0";
+}

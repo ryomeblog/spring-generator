@@ -1,0 +1,30 @@
+package ${project_path}.controller.${tblname};
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.validation.*;
+import org.springframework.validation.annotation.*;
+import org.springframework.web.bind.annotation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.controller.*;
+import ${project_path}.request.${tblname}.*;
+import ${project_path}.response.*;
+import ${project_path}.service.${tblname}.*;
+
+@RestController
+public class Delete${uppertblname}Controller extends BaseController {
+
+    @Autowired
+    private ${uppertblname}Service ${tblname}Service;
+
+    @DeleteMapping("${path}")
+    public ApiResponse deleteByPrimaryKey(@ModelAttribute @Validated ${uppertblname}PathParameter request, BindingResult bindingResult) {
+
+        // 削除処理
+        ${tblname}Service.delete(
+${getordelpkparamsController});
+
+        // レスポンス返却
+        return new ApiResponse(ResultCode.C000);
+    }
+}

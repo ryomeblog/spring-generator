@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  app:
+    build: ./app
+    container_name: test-spring-generator
+    tty: true
+    volumes:
+      - ./app:/root
+    depends_on:
+      - db
+  db:
+    image: postgres:14
+    container_name: test-postgres
+    ports:
+      - 15432:5432
+    volumes:
+      - test-db-store:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=testUser
+      - POSTGRES_PASSWORD=testPassword
+      - POSTGRES_DB=test
+volumes:
+  test-db-store:

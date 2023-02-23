@@ -1,0 +1,108 @@
+package ${project_path}.validations;
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+import static ${project_path}.constant.ApiErrorMessage.*;
+import static ${project_path}.constant.Constant.*;
+
+import java.lang.annotation.*;
+
+import javax.validation.*;
+
+/**
+ * 半角数字(Short)制約。
+ */
+@Documented
+@Constraint(validatedBy = {ShortType.Validator.class})
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+public @interface ShortType {
+
+    /**
+     * message
+     *
+     * @return message
+     */
+    String message() default MSG_API_ERR_003;
+
+    /**
+     * groups
+     *
+     * @return Class配列
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * payload
+     *
+     * @return Class配列
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /** 最小値を設定します。 */
+    int min() default Short.MIN_VALUE;
+
+    /** 最大値を設定します。 */
+    int max() default Short.MAX_VALUE;
+
+    /** 空を許容する場合trueを設定します。 */
+    boolean acceptEmpty() default false;
+
+    /**
+     * +,-の符号を許容する場合trueを設定します。
+     * 負の数を許容する場合は必ずtrueを設定して下さい。
+     */
+    boolean acceptSign() default false;
+
+    /**
+     * List
+     */
+    @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        /**
+         * value
+         *
+         * @return ShortType配列
+         */
+        ShortType[] value();
+    }
+
+    /**
+     * 半角数字バリデータ。
+     */
+    class Validator implements ConstraintValidator<ShortType, String> {
+
+        private ShortType shortType;
+
+        @Override
+        public void initialize(ShortType shortType) {
+            this.shortType = shortType;
+        }
+
+        @Override
+        public boolean isValid(String value, ConstraintValidatorContext context) {
+            if (isEmpty(value) || shortType.acceptEmpty()) {
+                return true;
+            }
+
+            if (shortType.acceptSign()
+                    && !regexCheck(value, NUMBER_REGEX)) {
+                return false;
+            }
+            if (!shortType.acceptSign()
+                    && !regexCheck(value, HALF_NUMERIC_REGEX)) {
+                return false;
+            }
+
+            // parseShortチェック, min/maxチェック
+            try {
+                short valueShort = toShort(value);
+                return valueShort >= shortType.min() && valueShort <= shortType.max();
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+    }
+}

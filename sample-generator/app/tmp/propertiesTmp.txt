@@ -1,0 +1,26 @@
+# ポート番号
+server.port=${PORT:8080}
+# 存在しないパスへアクセスした際の例外を処理を許可
+spring.mvc.throw-exception-if-no-handler-found: true
+# 自動コンフィギュレーションの無効化
+spring.resources.add-mappings: false
+# データベースのJDBC URL
+spring.datasource.url=${POSTGRES_URL:jdbc:postgresql://@{host}:@{port}/@{dbname}}
+# データベースのユーザー名
+spring.datasource.username=${POSTGRES_USER:@{user}}
+# データベースのパスワード
+spring.datasource.password=${POSTGRES_PASSWORD:@{password}}
+# データベースのJDBC ドライバー
+spring.datasource.driver-class-name=org.postgresql.Driver
+# データベースの文字コード
+spring.datasource.sql-script-encoding=UTF-8
+# セッション Cookie の Secure 設定
+server.servlet.session.cookie.secure=true
+# データベース接続のタイムアウト
+spring.datasource.hikari.connection-timeout=30000
+# データベースコネクションの最大接続数
+spring.datasource.hikari.maximum-pool-size=10
+# FreeMarkerAutoConfigurationをオフ
+spring.freemarker.checkTemplateLocation=false
+# ログレベル
+logging.level.org.springframework=INFO

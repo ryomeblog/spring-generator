@@ -1,0 +1,52 @@
+package ${project_path}.exception;
+
+import org.springframework.http.HttpStatus;
+
+import ${project_path}.constant.ResultCode;
+
+public class ${uppername}Exception extends RuntimeException {
+
+    /** 結果コード */
+    private ResultCode resultCode;
+
+    /** HTTPステータスコード */
+    private HttpStatus httpStatus;
+
+    /**
+     * コンストラクタ
+     *
+     * @param e
+     */
+    public ${uppername}Exception(Throwable e) {
+        super.initCause(e);
+    }
+
+    /**
+     * コンストラクタ
+     *
+     * @param httpStatus HTTPステータスコード
+     * @param resultCode 結果コード
+     */
+    public ${uppername}Exception(HttpStatus httpStatus, ResultCode resultCode) {
+        this.resultCode = resultCode;
+        this.httpStatus = httpStatus;
+    }
+
+    /**
+     * 結果コードを取得します。
+     *
+     * @return 結果コード
+     */
+    public ResultCode getResultCode() {
+        return resultCode;
+    }
+
+    /**
+     * HTTPステータスコードを取得します。
+     *
+     * @return HTTPステータスコード
+     */
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
+}

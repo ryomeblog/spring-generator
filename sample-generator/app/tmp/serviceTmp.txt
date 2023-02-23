@@ -1,0 +1,26 @@
+package ${project_path}.service.${tblname};
+
+import java.util.*;
+
+import org.springframework.stereotype.Service;
+
+import ${project_path}.dto.generator.${uppertblname};
+
+@Service
+public interface ${uppertblname}Service {
+
+    Integer getListCount(
+${getListCountParams});
+    List<${uppertblname}> getList(
+${getListCountParams},
+            Integer orderBy,
+            Integer ascOrDesc,
+            Integer limit,
+            Integer offset);
+    ${uppertblname} getListByPrimaryKey(${getordelpkparams});
+    Boolean insert(${uppertblname} ${tblname});
+    String insertWithId(${uppertblname} ${tblname});
+    void edit(${uppertblname} ${tblname});
+    void delete(${getordelpkparams});
+
+}

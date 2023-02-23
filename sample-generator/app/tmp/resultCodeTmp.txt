@@ -1,0 +1,61 @@
+package ${project_path}.constant;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+
+/**
+ * 結果コード
+ */
+public enum ResultCode {
+    /** 正常終了 */
+    C000("000"),
+
+    /** リクエストパラメータ不正 */
+    C101("101"),
+
+    /** ユーザIDまたはパスワードが不正 */
+    C102("102"),
+
+    /** 認証情報不正(権限エラー) */
+    C103("103"),
+
+    /** ID作成に失敗 */
+    C104("104"),
+
+    /** 取得、更新、削除対象のデータが存在しない */
+    C105("105"),
+
+    /** 既に同一キーが存在するデータを作成しようとした */
+    C106("106"),
+
+    /** 排他制御が行われた */
+    C107("107"),
+
+    /** 外部との通信に失敗した */
+    C108("108"),
+
+    /** 不正なDB処理を検知した */
+    C109("109"),
+
+    ;
+
+    private final String resultCode;
+
+    /**
+     * Constructor
+     *
+     * @param code resultCode
+     */
+    ResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    /**
+     * To String
+     *
+     * @return String
+     */
+    @JsonValue
+    public String toString() {
+        return this.resultCode;
+    }
+}

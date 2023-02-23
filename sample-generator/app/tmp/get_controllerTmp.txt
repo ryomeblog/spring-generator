@@ -1,0 +1,63 @@
+package ${project_path}.controller.${tblname};
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+
+import java.util.*;
+import java.util.stream.*;
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.validation.*;
+import org.springframework.validation.annotation.*;
+import org.springframework.web.bind.annotation.*;
+
+import ${project_path}.constant.*;
+import ${project_path}.controller.*;
+import ${project_path}.dto.generator.*;
+import ${project_path}.request.${tblname}.*;
+import ${project_path}.response.*;
+import ${project_path}.response.${tblname}.*;
+import ${project_path}.service.${tblname}.*;
+
+@RestController
+public class Get${uppertblname}Controller extends BaseController {
+
+    @Autowired
+    private ${uppertblname}Service ${tblname}Service;
+
+    @GetMapping("${path}")
+    public ApiResponseOptional<Get${uppertblname}Response> get${uppertblname}(
+            @ModelAttribute @Validated Get${uppertblname}Request request, BindingResult bindingResult) {
+        // バリデーションチェック
+        valid(bindingResult);
+
+        // 総件数
+        Integer total = asInt(${tblname}Service.getListCount(
+${getListCountRequestVals}));
+
+        // リスト
+        List<${uppertblname}> dtoList = ${tblname}Service.getList(
+${getListCountRequestVals},
+                toInt(request.getOrderBy()),
+                toInt(request.getAscOrDesc()),
+                toInt(request.getLimit()),
+                toInt(request.getOffset()));
+
+        // レスポンス返却
+        return new ApiResponseOptional<>(ResultCode.C000, createResponse(total, dtoList));
+    }
+
+    Get${uppertblname}Response createResponse(Integer total, List<${uppertblname}> dtoList) {
+        // レスポンス作成
+        Get${uppertblname}Response optional = new Get${uppertblname}Response();
+
+        // レスポンス格納
+        optional.setTotal(total);
+        optional.setGet${uppertblname}TmpList(dtoList.stream().map(
+                dto -> new Get${uppertblname}Response.Get${uppertblname}ResponseTmp()
+${setTmpList})
+                .collect(Collectors.toList()));
+
+        return optional;
+    }
+}

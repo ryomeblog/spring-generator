@@ -1,0 +1,125 @@
+package ${project_path}.service.${tblname};
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+import static ${project_path}.constant.Constant.*;
+import static ${project_path}.constant.IdFormatterConstant.*;
+
+import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import ${project_path}.constant.ResultCode;
+import ${project_path}.dao.${uppertblname}MapperImpl;
+import ${project_path}.dto.generator.${uppertblname};
+import ${project_path}.exception.${uppername}Exception;
+
+@Service
+public class ${uppertblname}ServiceImpl implements ${uppertblname}Service {
+
+    @Autowired
+    private ${uppertblname}MapperImpl ${tblname}Mapper;
+
+    @Override
+    public Integer getListCount(
+${getListCountParams}) {
+        return ${tblname}Mapper.selectListCount(
+${selectListCountParams});
+    }
+
+    @Override
+    public List<${uppertblname}> getList(
+${getListCountParams},
+            Integer orderBy,
+            Integer ascOrDesc,
+            Integer limit,
+            Integer offset) {
+        return ${tblname}Mapper.selectList(
+${selectListCountParams}, 
+            orderBy, 
+            ascOrDesc, 
+            limit, 
+            offset);
+    }
+
+    @Override
+    public ${uppertblname} getListByPrimaryKey(${getordelpkparams}) {
+        return ${tblname}Mapper.selectByPrimaryKey(${getordelpkvals});
+    }
+
+    @Override
+    public Boolean insert(${uppertblname} ${tblname}) {
+
+        // 登録処理処理
+        return ${tblname}Mapper.insertSelective(${tblname}) != 0;
+    }
+
+    @Override
+    public String insertWithId(${uppertblname} ${tblname}) {
+
+        // 最大値IDを取得
+        String id = ${tblname}Mapper.selectMaxId();
+
+        // 最大値ID + 1
+        String maxId = format(idToValue(id, ${upper_snake_tbl_name}_ID_PREFIX) + 1, ${upper_snake_tbl_name}_ID_FORMAT);
+
+        // ID作成確認
+        if (isNull(maxId)) {
+            throw new ${uppername}Exception(HttpStatus.INTERNAL_SERVER_ERROR, ResultCode.C104);
+        }
+
+        // 最大のIDを格納
+        ${tblname}${setMaxIdPknames};
+
+        // 登録処理処理
+        ${tblname}Mapper.insertSelective(${tblname});
+
+        return maxId;
+    }
+
+    @Override
+    public void edit(${uppertblname} ${tblname}) {
+
+        // レコード取得
+        ${uppertblname} get${uppertblname} = ${tblname}Mapper.selectByPrimaryKey(${editpkvals});
+
+        if (isNull(get${uppertblname})) {
+            // レコードが存在しない
+            throw new ${uppername}Exception(HttpStatus.NOT_FOUND, ResultCode.C105);
+        }
+
+        if (!eq(get${uppertblname}.getVersion(), ${tblname}.getVersion())) {
+            // バージョン不一致による排他制御
+            throw new ${uppername}Exception(HttpStatus.CONFLICT, ResultCode.C107);
+        }
+
+        // バージョンインクリメント
+        ${tblname}.setVersion(toShort(${tblname}.getVersion() + 1));
+
+        if (${tblname}Mapper.updateByPrimaryKeySelective(${tblname}) == 0) {
+            // 不正なDB処理
+            throw new ${uppername}Exception(HttpStatus.INTERNAL_SERVER_ERROR, ResultCode.C109);
+        }
+    }
+
+    @Override
+    public void delete(${getordelpkparams}) {
+
+        // レコード取得
+        ${uppertblname} ${tblname} = ${tblname}Mapper.selectByPrimaryKey(${getordelpkvals});
+
+        // レコードの存在チェック
+        if (isNull(${tblname})) {
+            // レコードが存在しない
+            throw new ${uppername}Exception(HttpStatus.NOT_FOUND, ResultCode.C105);
+        }
+
+        // 削除処理
+        if (${tblname}Mapper.deleteByPrimaryKey(${getordelpkvals}) == 0) {
+            // 不正なSQL文の検知
+            throw new ${uppername}Exception(HttpStatus.INTERNAL_SERVER_ERROR, ResultCode.C109);
+        }
+    }
+}

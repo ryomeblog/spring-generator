@@ -1,0 +1,44 @@
+package ${project_path}.service;
+
+import static ${project_path}.common.CommonUtils.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import ${project_path}.dao.${auth_tblname}MapperImpl;
+import ${project_path}.dto.generator.${auth_tblname};
+
+@Service
+@Component("UserDetailsServiceImpl")
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    /** ユーザテーブルMapperImpl */
+    @Autowired
+    private ${auth_tblname}MapperImpl userMapper;
+
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        // ユーザIDのNULLチェック
+        if (username == null) { throw new UsernameNotFoundException("ユーザIDが不正です"); }
+
+        // ユーザ情報取得
+        ${auth_tblname} user = userMapper.selectByPrimaryKey(username);
+
+        // ユーザIDのNULLチェック
+        if (user == null) { throw new UsernameNotFoundException("ユーザは存在しません"); }
+
+        // 権限を取得
+        String role = getRole(user.get${upper_authority_column}());
+
+        return new User(user.get${upper_username_column}(), user.get${upper_passward_column}(), AuthorityUtils.createAuthorityList(role));
+    }
+
+}

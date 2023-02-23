@@ -1,0 +1,77 @@
+package ${project_path}.validations;
+
+import static ${project_path}.common.CommonUtils.*;
+import static ${project_path}.common.Functions.*;
+import static ${project_path}.constant.ApiErrorMessage.*;
+import static ${project_path}.constant.Constant.*;
+
+import java.lang.annotation.*;
+
+import javax.validation.*;
+
+/**
+ * 半角数字制約。
+ */
+@Documented
+@Constraint(validatedBy = {NumberType.Validator.class})
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+public @interface NumberType {
+
+    /**
+     * message
+     *
+     * @return message
+     */
+    String message() default MSG_API_ERR_003;
+
+    /**
+     * groups
+     *
+     * @return Class配列
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * payload
+     *
+     * @return Class配列
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /**
+     * List
+     */
+    @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+        /**
+         * value
+         *
+         * @return NumberType配列
+         */
+        NumberType[] value();
+    }
+
+    /**
+     * 半角数字バリデータ。
+     */
+    class Validator implements ConstraintValidator<NumberType, String> {
+
+        private NumberType numberType;
+
+        @Override
+        public void initialize(NumberType numberType) {
+            this.numberType = numberType;
+        }
+
+        @Override
+        public boolean isValid(String value, ConstraintValidatorContext context) {
+            if (isEmpty(value)) {
+                return true;
+            }
+            return regexCheck(value, HALF_NUMERIC_REGEX);
+        }
+    }
+}

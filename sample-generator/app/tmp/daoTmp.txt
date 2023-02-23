@@ -1,0 +1,23 @@
+package ${project_path}.dao;
+
+import java.util.*;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import ${project_path}.dao.generator.${uppertblname}Mapper;
+import ${project_path}.dto.generator.${uppertblname};
+
+@Repository
+public interface ${uppertblname}MapperImpl extends ${uppertblname}Mapper {
+
+    String selectMaxId();
+    Integer selectListCount(
+${daoParams});
+    List<${uppertblname}> selectList(
+${daoParams},
+            @Param("orderBy") Integer orderBy,
+            @Param("ascOrDesc") Integer ascOrDesc,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset);
+}

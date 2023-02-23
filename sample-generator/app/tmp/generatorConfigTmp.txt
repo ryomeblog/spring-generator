@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="@{name}" targetRuntime="MyBatis3">
+
+    <!-- DB接続先 -->
+    <jdbcConnection driverClass="org.postgresql.Driver"
+      connectionURL="jdbc:postgresql://@{host}:@{port}/@{dbname}"
+      userId="@{user}" password="@{password}">
+    </jdbcConnection>
+
+    <!-- DTO -->
+    <javaModelGenerator
+      targetPackage="@{name}.dto.generator"
+      targetProject="@{name}/src/main/java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <!-- Mapper xml -->
+    <sqlMapGenerator targetPackage="@{name}.dao.generator"
+      targetProject="@{name}/src/main/resources">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <!-- Mapper -->
+    <javaClientGenerator type="XMLMAPPER"
+      targetPackage="@{name}.dao.generator"
+      targetProject="@{name}/src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+    <!-- テーブル -->
+@{tbl}
+
+  </context>
+</generatorConfiguration>

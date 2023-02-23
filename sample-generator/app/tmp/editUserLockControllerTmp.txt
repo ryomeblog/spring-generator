@@ -1,0 +1,46 @@
+package ${project_path}.controller.user;
+
+import static ${project_path}.common.Functions.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${project_path}.constant.ResultCode;
+import ${project_path}.controller.BaseController;
+import ${project_path}.dto.generator.${upper_auth_tblname};
+import ${project_path}.request.user.EditUserLockRequest;
+import ${project_path}.response.ApiResponse;
+import ${project_path}.service.${auth_tblname}.${upper_auth_tblname}Service;
+
+@RestController
+public class EditUserLockController extends BaseController {
+
+    @Autowired
+    private ${upper_auth_tblname}Service userService;
+
+    @PutMapping("/user/lock")
+    public ApiResponse editUserLock(
+            @RequestBody @Validated EditUserLockRequest request, BindingResult bindingResult) {
+        // バリデーションチェック
+        valid(bindingResult);
+
+        // ユーザロック
+        userService.edit((createDto(request)));
+
+        // レスポンス返却
+        return new ApiResponse(ResultCode.C000);
+    }
+
+    ${upper_auth_tblname} createDto(EditUserLockRequest request) {
+        // DTO作成
+        ${upper_auth_tblname} dto = new ${upper_auth_tblname}();
+        dto.set${upper_username_column}(request.getUserId());
+        dto.set${upper_lock_column}(toBoolean(request.getLock()));
+        dto.setVersion(toShort(request.getVersion()));
+        return dto;
+    }
+}
